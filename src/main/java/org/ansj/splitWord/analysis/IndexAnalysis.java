@@ -1,11 +1,8 @@
 package org.ansj.splitWord.analysis;
 
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import org.ansj.domain.Term;
 import org.ansj.domain.TermNatures;
@@ -89,7 +86,7 @@ public class IndexAnalysis extends Analysis {
 					if (term.getName().length() >= 3) {
 						GetWordsImpl gwi = new GetWordsImpl(term.getName());
 						while ((temp = gwi.allWords()) != null) {
-							if (temp.length() < term.getName().length()) {
+							if (temp.length() < term.getName().length() && temp.length()>1) {
 								last.add(new Term(temp, gwi.offe + term.getOffe(), TermNatures.NULL));
 							}
 						}
@@ -110,7 +107,6 @@ public class IndexAnalysis extends Analysis {
 	};
 
 	public IndexAnalysis(Forest... forests) {
-		// TODO Auto-generated constructor stub
 		this.forests = forests;
 	}
 

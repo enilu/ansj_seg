@@ -11,12 +11,10 @@ import java.io.UnsupportedEncodingException;
 import org.ansj.util.MyStaticValue;
 import org.nlpcn.commons.lang.tire.domain.Forest;
 import org.nlpcn.commons.lang.tire.domain.Value;
-import org.nlpcn.commons.lang.tire.domain.WoodInterface;
 import org.nlpcn.commons.lang.tire.library.Library;
 import org.nlpcn.commons.lang.util.IOUtil;
 import org.nlpcn.commons.lang.util.StringUtil;
 
-;
 
 /**
  * 用户自定义词典操作类
@@ -62,7 +60,6 @@ public class UserDefineLibrary {
 	 * 加载纠正词典
 	 */
 	private static void initAmbiguityLibrary() {
-		// TODO Auto-generated method stub
 		String ambiguityLibrary = MyStaticValue.ambiguityLibrary;
 		if (StringUtil.isBlank(ambiguityLibrary)) {
 			LIBRARYLOG.warning("init ambiguity  warning :" + ambiguityLibrary + " because : file not found or failed to read !");
@@ -88,14 +85,12 @@ public class UserDefineLibrary {
 	 * 加载用户自定义词典和补充词典
 	 */
 	private static void initUserLibrary() {
-		// TODO Auto-generated method stub
 		try {
 			FOREST = new Forest();
 			// 加载用户自定义词典
 			String userLibrary = MyStaticValue.userLibrary;
 			loadLibrary(FOREST, userLibrary);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -103,7 +98,6 @@ public class UserDefineLibrary {
 
 	// 单个文件加载词典
 	public static void loadFile(Forest forest, File file) {
-		// TODO Auto-generated method stub
 		if (!file.canRead()) {
 			LIBRARYLOG.warning("file in path " + file.getAbsolutePath() + " can not to read!");
 			return;
@@ -137,10 +131,8 @@ public class UserDefineLibrary {
 			}
 			LIBRARYLOG.info("init user userLibrary ok path is : " + file.getAbsolutePath());
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			IOUtil.close(br);
@@ -183,7 +175,7 @@ public class UserDefineLibrary {
 	}
 
 	public static String[] getParams(String word) {
-		WoodInterface temp = FOREST;
+		Forest temp = FOREST;
 		for (int i = 0; i < word.length(); i++) {
 			temp = temp.get(word.charAt(i));
 			if (temp == null) {
@@ -198,7 +190,7 @@ public class UserDefineLibrary {
 	}
 
 	public static String[] getParams(Forest forest, String word) {
-		WoodInterface temp = forest;
+		Forest temp = forest;
 		for (int i = 0; i < word.length(); i++) {
 			temp = temp.get(word.charAt(i));
 			if (temp == null) {

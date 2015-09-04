@@ -2,7 +2,7 @@ Ansj中文分词
 ==================
 
 
-#####使用帮助[http://ansjsun.github.io/ansj_seg/](http://ansjsun.github.io/ansj_seg/)
+#####使用帮助[http://nlpchina.github.io/ansj_seg/](http://nlpchina.github.io/ansj_seg/)
 
 #####在线测试地址<a href="http://demo.ansj.org">http://demo.ansj.org</href>
 
@@ -14,34 +14,30 @@ Ansj中文分词
 
 > 目前实现了.中文分词. 中文姓名识别 . 用户自定义词典
 
-> 可以应用到自然语言处理等方面,适用于对分词效果要求搞的各种项目.
+> 可以应用到自然语言处理等方面,适用于对分词效果要求高的各种项目.
 
 
 #####  下载jar
-* 访问 [http://maven.ansj.org/org/ansj/](http://maven.ansj.org/org/ansj/)
-* 下载两个jar 。最好下载最新版 ansj_seg/ 和 tree_split/ 的jar。
+* 访问 [http://maven.ansj.org/org/ansj/](http://maven.ansj.org/org/ansj/) 最好下载最新版 ansj_seg/
+  * 如果你用的是1.x版本需要下载[tree_split.jar](http://maven.ansj.org/org/ansj/tree_split/)。
+  * 如果你用的是2.x版本需要下载[nlp-lang.jar](http://maven.ansj.org/org/nlpcn/nlp-lang/)
 * 导入到eclipse ，开始你的程序吧
 
 
 #####  maven
-* 第一步在你的pom.xml中加入.
+1.  使用git下载本项目：
 
-````
-  <project...>
-    ....
+```
+git clone https://github.com/NLPchina/ansj_seg
+```
 
-    <repositories>
-        <repository>
-            <id>mvn-repo</id>
-            <url>http://maven.ansj.org/</url>
-        </repository>
-    </repositories>
-    ....
-</project>
-````
+2.  进入ansj_seg目录，使用maven安装项目：
 
+```
+mvn clean install -Dmaven.test.skip=true
+```
 
-* 在dependencies标签中粘贴如下:(其实version 以最新的为标准.)
+3.  在dependencies标签中粘贴如下:(其实version 以最新的为标准.)
 
 ````
     <dependencies>
@@ -50,7 +46,7 @@ Ansj中文分词
         <dependency>
             <groupId>org.ansj</groupId>
             <artifactId>ansj_seg</artifactId>
-            <version>1.41</version>
+            <version>1.4.1</version>
         </dependency>
         ....
     </dependencies>
@@ -72,7 +68,8 @@ Ansj中文分词
 
 ----
 ##大事记要
-
+#2014年10月10日
+> 命运无常,上天和我开了个玩笑,可能我以后没有精力来维护ansj_seg了.所以我把它贡献到nlp_china这个组织中,也许会有有兴趣的同学能替代我维护这个项目.不要乱猜,我身体很好.工作也不忙.感谢你们的支持ansj_seg才能发展这么好.最后祝好.
 
 #2014年6月13日
 > 额，今天是黑色星期五。正在紧张而有序的在做ansj2.0版本的升级。如果你用的版本是2.0x都是预览版。不保证稳定性。所以非版本控。不要跟着更新，这次修改的内容主要有：

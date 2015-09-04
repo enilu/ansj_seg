@@ -1,12 +1,14 @@
 package org.ansj.util;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -17,6 +19,7 @@ import org.ansj.app.crf.SplitWord;
 import org.ansj.dic.DicReader;
 import org.ansj.domain.AnsjItem;
 import org.ansj.library.DATDictionary;
+import org.nlpcn.commons.lang.util.FileFinder;
 import org.nlpcn.commons.lang.util.IOUtil;
 import org.nlpcn.commons.lang.util.StringUtil;
 
@@ -54,6 +57,8 @@ public class MyStaticValue {
 
 	public static String ambiguityLibrary = "library/ambiguity.dic";
 
+	private static String crfModel = "library/crf.model";
+
 	/**
 	 * 是否用户辞典不加载相同的词
 	 */
@@ -63,19 +68,35 @@ public class MyStaticValue {
 		/**
 		 * 配置文件变量
 		 */
+		ResourceBundle rb = null;
 		try {
-			ResourceBundle rb = ResourceBundle.getBundle("library");
-			if (rb.containsKey("userLibrary"))
-				userLibrary = rb.getString("userLibrary");
-			if (rb.containsKey("ambiguityLibrary"))
-				ambiguityLibrary = rb.getString("ambiguityLibrary");
-			if (rb.containsKey("isSkipUserDefine"))
-				isSkipUserDefine = Boolean.valueOf(rb.getString("isSkipUserDefine"));
-			if (rb.containsKey("isRealName"))
-				isRealName = Boolean.valueOf(rb.getString("isRealName"));
+			rb = ResourceBundle.getBundle("library");
 		} catch (Exception e) {
+			try {
+				File find = FileFinder.find("library.properties");
+				if (find != null) {
+					rb = new PropertyResourceBundle(IOUtil.getReader(find.getAbsolutePath(), System.getProperty("file.encoding")));
+					LIBRARYLOG.info("load library not find in classPath ! i find it in " + find.getAbsolutePath() + " make sure it is your config!");
+				}
+			} catch (Exception e1) {
+				LIBRARYLOG.warning("not find library.properties. and err " + e.getMessage() + " i think it is a bug!");
+			}
+		}
+
+		if (rb == null) {
 			LIBRARYLOG.warning("not find library.properties in classpath use it by default !");
 		}
+
+		if (rb.containsKey("userLibrary"))
+			userLibrary = rb.getString("userLibrary");
+		if (rb.containsKey("ambiguityLibrary"))
+			ambiguityLibrary = rb.getString("ambiguityLibrary");
+		if (rb.containsKey("isSkipUserDefine"))
+			isSkipUserDefine = Boolean.valueOf(rb.getString("isSkipUserDefine"));
+		if (rb.containsKey("isRealName"))
+			isRealName = Boolean.valueOf(rb.getString("isRealName"));
+		if (rb.containsKey("crfModel"))
+			crfModel = rb.getString("crfModel");
 	}
 
 	/**
@@ -111,7 +132,6 @@ public class MyStaticValue {
 	 * @return
 	 */
 	public static BufferedReader getArraysReader() {
-		// TODO Auto-generated method stub
 		return DicReader.getReader("arrays.dic");
 	}
 
@@ -121,7 +141,6 @@ public class MyStaticValue {
 	 * @return
 	 */
 	public static BufferedReader getNumberReader() {
-		// TODO Auto-generated method stub
 		return DicReader.getReader("numberLibrary.dic");
 	}
 
@@ -131,7 +150,6 @@ public class MyStaticValue {
 	 * @return
 	 */
 	public static BufferedReader getEnglishReader() {
-		// TODO Auto-generated method stub
 		return DicReader.getReader("englishLibrary.dic");
 	}
 
@@ -141,7 +159,6 @@ public class MyStaticValue {
 	 * @return
 	 */
 	public static BufferedReader getNatureMapReader() {
-		// TODO Auto-generated method stub
 		return DicReader.getReader("nature/nature.map");
 	}
 
@@ -151,7 +168,6 @@ public class MyStaticValue {
 	 * @return
 	 */
 	public static BufferedReader getNatureTableReader() {
-		// TODO Auto-generated method stub
 		return DicReader.getReader("nature/nature.table");
 	}
 
@@ -161,7 +177,6 @@ public class MyStaticValue {
 	 * @return
 	 */
 	public static BufferedReader getPersonFreqReader() {
-		// TODO Auto-generated method stub
 		return DicReader.getReader("person/name_freq.dic");
 	}
 
@@ -181,10 +196,8 @@ public class MyStaticValue {
 			map = (Map<String, int[][]>) objectInputStream.readObject();
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			try {
@@ -193,7 +206,6 @@ public class MyStaticValue {
 				if (inputStream != null)
 					inputStream.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -234,27 +246,24 @@ public class MyStaticValue {
 				if (fromItem == AnsjItem.NULL || toItem == AnsjItem.NULL) {
 					continue;
 				}
-				
-				if(fromItem.bigramEntryMap==null){
-					fromItem.bigramEntryMap = new HashMap<Integer, Integer>() ;
+
+				if (fromItem.bigramEntryMap == null) {
+					fromItem.bigramEntryMap = new HashMap<Integer, Integer>();
 				}
 
-				fromItem.bigramEntryMap.put(toItem.index, freq) ;
+				fromItem.bigramEntryMap.put(toItem.getIndex(), freq);
 
 			}
 		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			IOUtil.close(reader);
 		}
-		
+
 	}
 
 	/**
@@ -263,22 +272,20 @@ public class MyStaticValue {
 	 * @return
 	 */
 	public static SplitWord getCRFSplitWord() {
-		// TODO Auto-generated method stub
 		if (crfSplitWord != null) {
 			return crfSplitWord;
 		}
 		LOCK.lock();
-		if (crfSplitWord != null) {
+		if (crfSplitWord != null || StringUtil.isBlank(crfModel)) {
 			return crfSplitWord;
 		}
 
 		try {
 			long start = System.currentTimeMillis();
 			LIBRARYLOG.info("begin init crf model!");
-			crfSplitWord = new SplitWord(Model.loadModel(DicReader.getInputStream("crf/crf.model")));
+			crfSplitWord = new SplitWord(Model.loadModel(crfModel));
 			LIBRARYLOG.info("load crf crf use time:" + (System.currentTimeMillis() - start));
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			LOCK.unlock();

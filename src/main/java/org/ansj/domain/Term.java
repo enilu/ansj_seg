@@ -3,6 +3,7 @@ package org.ansj.domain;
 import java.util.List;
 
 import org.ansj.util.MathUtil;
+import org.nlpcn.commons.lang.util.StringUtil;
 
 public class Term implements Comparable<Term> {
 	// 当前词
@@ -123,6 +124,10 @@ public class Term implements Comparable<Term> {
 	 */
 	public Term merage(Term to) {
 		this.name = this.name + to.getName();
+		if (StringUtil.isNotBlank(this.realName) && StringUtil.isNotBlank(to.getRealName())) {
+			this.realName = this.realName + to.getRealName();
+		}
+		this.setTo(to.to);
 		return this;
 	}
 
@@ -135,7 +140,7 @@ public class Term implements Comparable<Term> {
 		this.offe += offe;
 	}
 
-	public Term getNext() {
+	public Term next() {
 		return next;
 	}
 
@@ -187,7 +192,6 @@ public class Term implements Comparable<Term> {
 	}
 
 	public void setNature(Nature nature) {
-		// TODO Auto-generated method stub
 		this.nature = nature;
 	}
 
